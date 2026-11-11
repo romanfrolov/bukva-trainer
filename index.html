@@ -29,6 +29,7 @@
 
 
 
+
 /* ADDITIONS: MEMORY AND TRANSFER */
 .memory-picture{margin:15px 0 0;display:grid;grid-template-columns:minmax(160px,.95fr) minmax(150px,1fr);align-items:center;gap:16px;padding:12px;background:#faf8fe;border:1px solid #ece5f7;border-radius:16px;text-align:left;color:#70667f;width:100%}.memory-visual{min-width:0}.memory-visual svg{width:100%;height:auto;display:block;stroke:none;stroke-width:0;overflow:visible}.memory-picture figcaption{font-size:12px;line-height:1.75}.memory-picture figcaption strong{display:block;font-size:11px;color:#81709e;margin-bottom:5px}.memory-picture figcaption span{display:block}.feedback .memory-picture{background:#fffafd;border-color:#f1e2ee}.feedback .memory-picture figcaption{color:#78667c}.card-answer-mistake{margin-top:15px;font-size:12px;color:#9b6851}.card-answer-mistake strong{color:#9b6851}@media(max-width:600px){.memory-picture{grid-template-columns:1fr;gap:8px;padding:12px}.memory-visual{max-width:320px;width:100%;margin:auto}.memory-picture figcaption{font-size:12px;padding:0 3px 3px}.memory-picture figcaption strong{margin-bottom:3px}}
 
@@ -65,6 +66,12 @@
 .word-filter-buttons button:focus-visible{outline-offset:0}
 .word-filter-help{margin:8px 0 0;color:#64667c;font-size:12px;line-height:1.55}
 .word-chip:disabled,.word-chip:disabled:hover{border-color:var(--line);cursor:not-allowed}
+
+.progress-summary .mini-heading h2{font-size:14px}
+.progress-counts{display:grid;gap:9px;list-style:none;margin:0;padding:0}
+.progress-counts li{display:grid;grid-template-columns:32px minmax(0,1fr);align-items:center;gap:9px;color:#514c65;font-size:12px;line-height:1.4}
+.progress-counts strong{display:grid;place-items:center;min-height:28px;border-radius:8px;background:var(--lilac);color:var(--violet-dark);font-size:14px;font-variant-numeric:tabular-nums}
+
 @media(min-width:761px){.right-column{padding-top:126px}}
 @media(max-width:390px){
  .word-filter-buttons button{padding-inline:8px}
@@ -109,7 +116,15 @@
     <div class="session-bar"><div class="session-progress"><span id="session-count">0 из 43 пройдено</span><span class="session-line" aria-hidden="true"><i id="session-fill"></i></span></div><button class="shuffle" id="shuffle"><span data-icon="shuffle"></span>Перемешать</button></div>
    </section>
    <aside class="right-column" aria-label="Твои результаты">
-    <section class="mini-panel"><div class="mini-heading"><span data-icon="target"></span><h2>Маленькая цель на день</h2></div><div class="daily-value"><span id="daily-count">0</span><small> / 10 слов</small></div><p id="daily-text">Всего несколько минут для себя и новых знаний.</p><div class="daily-track"><i id="daily-bar"></i></div></section>
+    <section class="mini-panel progress-summary" id="progress-summary" aria-labelledby="progress-summary-title">
+ <div class="mini-heading"><h2 id="progress-summary-title">Прогресс</h2></div>
+ <ul class="progress-counts" role="list">
+  <li><strong id="progress-total">0</strong> <span>всего слов</span></li>
+  <li><strong id="progress-cards">0</strong> <span>проверено в карточках</span></li>
+  <li><strong id="progress-input">0</strong> <span>проверено в пропущенных буквах</span></li>
+  <li><strong id="progress-dictation">0</strong> <span>проверено в диктанте</span></li>
+ </ul>
+</section>
     <section class="mini-panel learning-guide" id="learning-guide" aria-labelledby="learning-guide-title"><div class="mini-heading"><h2 id="learning-guide-title">Как выучить слово</h2></div><ul class="learning-requirements"><li><span>Карточки</span><strong>1 раз</strong></li><li><span>Пропущенные буквы</span><strong>2 подряд</strong></li><li><span>Диктант</span><strong>2 подряд</strong></li></ul></section>
     <div class="tip"><span data-icon="bulb"></span><p><strong>Маленький секрет</strong>Проговори слово по слогам и представь, как пишется каждая буква.</p></div>
    </aside>
@@ -811,10 +826,14 @@ function renderCompletion(){
 }
 function wordLabel(n){const tens=n%100,ones=n%10;return tens>=11&&tens<=14?'слов':ones===1?'слово':ones>=2&&ones<=4?'слова':'слов';}
 function updateStats(){
- const mastered=WORDS.filter((_,i)=>isMastered(record(i))).length,pct=Math.round(mastered/WORDS.length*100),daily=dayWords().length;
+ const records=WORDS.map((_,i)=>record(i));
+ const mastered=records.filter(isMastered).length,pct=Math.round(mastered/WORDS.length*100);
  $('mastered').textContent=mastered;$('percent').textContent=pct+'%';$('ring').style.strokeDashoffset=String(188.5*(1-mastered/WORDS.length));$('mastered-bar').style.width=pct+'%';
  $('progress-title').textContent=mastered===WORDS.length?'Все слова выучены!':mastered?'С каждым словом — увереннее':'У каждого слова есть свой секрет';$('progress-subtitle').textContent=mastered===WORDS.length?'Возвращайся время от времени, чтобы закрепить результат.':'В карточках — 1 верный ответ. В пропусках и диктанте — по 2 подряд.';
- $('daily-count').textContent=daily;$('daily-bar').style.width=Math.min(daily/10*100,100)+'%';$('daily-text').textContent=daily>=10?'Цель достигнута! Ты отлично потрудился сегодня.':'Повтори 10 разных слов за день. До цели: '+(10-daily)+'.';
+ $('progress-total').textContent=WORDS.length;
+ for(const [key,required] of Object.entries(REQUIREMENTS)){
+  $('progress-'+key).textContent=records.filter(r=>r.successes[key]>=required).length;
+ }
  $('migration-note').classList.toggle('hidden',!state.migrationNotice);$('migration-text').textContent='Перенесены сохранённые результаты. Самые ранние версии записывали общий результат без разбивки по режимам. Если при прошлом обновлении письменные зачёты обнулились, загрузите файл, сохранённый до того обновления.';renderCollection();updateStorageStatus();
 }
 function renderCollection(){
