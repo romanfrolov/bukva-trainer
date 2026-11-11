@@ -25,6 +25,7 @@
 
 
 
+
 /* ADDITIONS: MEMORY AND TRANSFER */
 .memory-picture{margin:15px 0 0;display:grid;grid-template-columns:minmax(160px,.95fr) minmax(150px,1fr);align-items:center;gap:16px;padding:12px;background:#faf8fe;border:1px solid #ece5f7;border-radius:16px;text-align:left;color:#70667f;width:100%}.memory-visual{min-width:0}.memory-visual svg{width:100%;height:auto;display:block;stroke:none;stroke-width:0;overflow:visible}.memory-picture figcaption{font-size:12px;line-height:1.75}.memory-picture figcaption strong{display:block;font-size:11px;color:#81709e;margin-bottom:5px}.memory-picture figcaption span{display:block}.feedback .memory-picture{background:#fffafd;border-color:#f1e2ee}.feedback .memory-picture figcaption{color:#78667c}.card-answer-mistake{margin-top:15px;font-size:12px;color:#9b6851}.card-answer-mistake strong{color:#9b6851}@media(max-width:600px){.memory-picture{grid-template-columns:1fr;gap:8px;padding:12px}.memory-visual{max-width:320px;width:100%;margin:auto}.memory-picture figcaption{font-size:12px;padding:0 3px 3px}.memory-picture figcaption strong{margin-bottom:3px}}
 
@@ -559,16 +560,6 @@ const isMastered=r=>Object.keys(REQUIREMENTS).every(key=>r.successes[key]>=REQUI
 function validRecord(r){return !!r&&!!r.successes&&Object.keys(REQUIREMENTS).every(key=>integer(r.successes[key],0,REQUIREMENTS[key]))&&typeof r.hard==='boolean'&&integer(r.attempts,Object.keys(REQUIREMENTS).reduce((sum,key)=>sum+(Number.isFinite(r.successes[key])?r.successes[key]:0),0))&&integer(r.legacyStreak===undefined?0:r.legacyStreak,0,3);}
 function copyRecord(r){return{successes:{cards:r.successes.cards,input:r.successes.input,dictation:r.successes.dictation},hard:r.hard,attempts:r.attempts,legacyStreak:r.legacyStreak||0};}
 function migrateLegacyRecord(r){return{successes:freshSuccesses(),hard:r.hard,attempts:r.attempts,legacyStreak:r.streak};}
-function loadModeRecord(target,id,record,version){
- const restored=copyRecord(record);
- // В версии 2 верные ответы накапливались даже после ошибок.
- if(version===2&&(restored.successes.input>0||restored.successes.dictation>0)){
-  restored.successes.input=0;
-  restored.successes.dictation=0;
-  target.migrationNotice=true;
- }
- target.words[id]=restored;
-}
 function validSession(s,wordCount=WORDS.length){
  if(!s||!Object.keys(REQUIREMENTS).includes(s.mode)||!['all','hard','single'].includes(s.scope)||!Array.isArray(s.queue))return false;
  const n=s.queue.length;if(n>wordCount||new Set(s.queue).size!==n||!s.queue.every(i=>integer(i,0,wordCount-1)))return false;
@@ -588,7 +579,7 @@ try{
   state.migrationNotice=raw.migrationNotice===true;
   for(let i=0;i<wordCount;i++){
    const r=raw.words[i];
-   if(raw.version!==1&&validRecord(r))loadModeRecord(state,i,r,raw.version);
+   if(raw.version!==1&&validRecord(r))state.words[i]=copyRecord(r);
    else if(raw.version===1&&r&&integer(r.streak,0,3)&&typeof r.hard==='boolean'){
     const legacy={streak:r.streak,hard:r.hard,attempts:integer(r.attempts,0)?Math.max(r.attempts,r.streak):r.streak};
     state.words[i]=migrateLegacyRecord(legacy);
@@ -705,7 +696,7 @@ function updateStats(){
  $('mastered').textContent=mastered;$('percent').textContent=pct+'%';$('ring').style.strokeDashoffset=String(188.5*(1-mastered/WORDS.length));$('mastered-bar').style.width=pct+'%';
  $('progress-title').textContent=mastered===WORDS.length?'Все слова выучены!':mastered?'С каждым словом — увереннее':'У каждого слова есть свой секрет';$('progress-subtitle').textContent=mastered===WORDS.length?'Возвращайся время от времени, чтобы закрепить результат.':'В карточках — 1 верный ответ. В пропусках и диктанте — по 2 подряд.';
  $('daily-count').textContent=daily;$('daily-bar').style.width=Math.min(daily/10*100,100)+'%';$('daily-text').textContent=daily>=10?'Цель достигнута! Ты отлично потрудился сегодня.':'Повтори 10 разных слов за день. До цели: '+(10-daily)+'.';
- $('migration-note').classList.toggle('hidden',!state.migrationNotice);$('migration-text').textContent='Прежние попытки сохранены. Зачёты в карточках перенесены, если они были записаны отдельно. После обновления серии в пропусках и диктанте считаются заново.';renderCollection();updateStorageStatus();
+ $('migration-note').classList.toggle('hidden',!state.migrationNotice);$('migration-text').textContent='Перенесены сохранённые результаты. Самые ранние версии записывали общий результат без разбивки по режимам. Если при прошлом обновлении письменные зачёты обнулились, загрузите файл, сохранённый до того обновления.';renderCollection();updateStorageStatus();
 }
 function renderCollection(){const term=$('search').value.trim().toLocaleLowerCase('ru');const list=WORDS.map((w,i)=>({w,i})).filter(({w})=>w.word.includes(term));$('word-grid').innerHTML=list.length?list.map(({w,i})=>{const r=record(i),mastered=isMastered(r),started=Object.values(r.successes).some(n=>n>0),status=mastered?'mastered':r.hard?'hard':started?'started':'';const counts='Карточки '+r.successes.cards+'/1 · Пропуски '+r.successes.input+'/2 · Диктант '+r.successes.dictation+'/2';return '<button class="word-chip '+status+'" data-word="'+i+'" aria-label="'+w.word+'. '+(mastered?'Выучено. ':r.hard?'Сложное слово. ':'')+counts+'"><span class="status" aria-hidden="true">'+(mastered?'✓':r.hard?'!':started?'·':'')+'</span><span class="chip-text">'+w.word+'<small class="chip-meta">'+counts+'</small></span></button>';}).join(''):'<p class="empty-state">Такого слова в коллекции нет.</p>';
  $('word-grid').querySelectorAll('[data-word]').forEach(btn=>btn.onclick=()=>{startSession('single',[Number(btn.dataset.word)]);scrollToStudy();});}
@@ -728,7 +719,11 @@ function parseProgressFile(data){
  for(const r of data.words){
   const i=r&&WORDS.findIndex(w=>w.word===r.word);if(!r||!integer(i,0,wordCount-1)||seen.has(i))fail('В файле есть неизвестные или повторяющиеся слова.');seen.add(i);
   if(legacy){if(!integer(r.streak,0,3)||typeof r.hard!=='boolean'||!integer(r.attempts,r.streak)||r.streak===3&&r.hard)fail('В файле повреждены прежние результаты слов.');next.words[i]=migrateLegacyRecord(r);if(r.attempts>0)next.migrationNotice=true;}
-  else{if(!validRecord(r))fail('В файле повреждены зачёты по режимам.');loadModeRecord(next,i,r,version);}
+  else{
+   if(!validRecord(r))fail('В файле повреждены зачёты по режимам.');
+   // Зачёты версии 2 переносим как записано: история ответов в файле отсутствует.
+   next.words[i]=copyRecord(r);
+  }
  }
  const d=data.daily;if(!d||typeof d.date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(d.date)||Number.isNaN(Date.parse(d.date))||new Date(d.date).toISOString().slice(0,10)!==d.date||!Array.isArray(d.words)||d.words.length>wordCount||new Set(d.words).size!==d.words.length)fail('В файле повреждён результат за день.');
  const dailyIds=d.words.map(word=>WORDS.findIndex(w=>w.word===word));if(!dailyIds.every(i=>integer(i,0,wordCount-1)))fail('В файле есть незнакомые слова.');next.daily[d.date]=dailyIds;
@@ -739,7 +734,7 @@ function parseProgressFile(data){
  return next;
 }
 
-function applyProgressFile(data){const next=parseProgressFile(data);fileHandle=null;writeRevision++;state=next;restoreSession(next.session);save();fileStatus('Результаты загружены. Продолжаем с того места, где остановились. Для записи в этот файл нажмите «Сохранить в файл».');toast('Результаты загружены. Можно продолжать тренировку.');}
+function applyProgressFile(data){const next=parseProgressFile(data);fileHandle=null;writeRevision++;state=next;restoreSession(next.session);save();fileStatus('Результаты загружены. Зачёты по каждому режиму видны в разделе «Все слова». Для записи в этот файл нажмите «Сохранить в файл».');toast('Результаты загружены. Можно продолжать тренировку.');}
 function fileStatus(message){$('file-status').textContent=message;}
 function serializedProgress(){return JSON.stringify(buildProgressFile(),null,2)+'\n';}
 function downloadProgress(){const blob=new Blob([serializedProgress()],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='буква-прогресс-'+todayKey()+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);fileStatus('Файл результатов скачан. Для переноса возьмите его вместе с index.html; на другом устройстве нажмите «Загрузить результаты».');toast('Файл результатов скачан. Сохраняйте свежую копию после занятий.');}
