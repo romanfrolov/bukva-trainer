@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#7460da">
-<meta name="description" content="Словарный тренажёр для 6 класса: 27 слов, карточки, пропущенные буквы, диктант и сохранение результатов.">
+<meta name="description" content="Словарный тренажёр для 6 класса. 43 слова, карточки, пропущенные буквы, диктант и сохранение результатов.">
 <title>Буква — словарный тренажёр</title>
 <style>
 :root{--bg:#f6f6fa;--paper:#fff;--ink:#24263d;--muted:#7b7d91;--violet:#7560da;--violet-dark:#604ac7;--lilac:#f0ecfc;--line:#eaeaf2;--green:#247d65;--green-bg:#edf8f3;--orange:#b87132;--orange-bg:#fff5e9;--red:#b4485b;--red-bg:#fff1f3;--radius:22px}
@@ -19,6 +19,7 @@
 @media(max-width:365px){.main{padding:20px 15px}.sidebar{padding:13px 15px}.grade{padding:4px 7px}.crumb{gap:6px;font-size:10px}.word-grid{gap:7px}.word-chip{padding:9px 7px;font-size:10px}.search{width:100%}.right-column{grid-template-columns:1fr}.tip{grid-column:auto}.word{font-size:23px}.card-actions{gap:8px}.card-actions .btn{font-size:11px}.banner-copy h2{font-size:14px}.card-top{gap:6px}.scope-tag{font-size:9px}}
 @media(max-width:760px){.word.long-word{font-size:clamp(18px,4.8vw,28px);letter-spacing:.4px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
 
 
 
@@ -41,7 +42,7 @@
   <a href="#" class="brand" aria-label="Буква — на главную"><span class="brand-icon" data-icon="book"></span><span class="brand-name">буква<span class="brand-dot">.</span></span></a>
   <div><p class="side-label">ТВОЁ ПРОСТРАНСТВО</p><nav class="nav">
    <button class="active" id="nav-study" aria-label="Тренировка" title="Тренировка"><span data-icon="layers"></span><span class="nav-label">Тренировка</span></button>
-   <button id="nav-words" aria-label="Все слова" title="Все слова"><span data-icon="grid"></span><span class="nav-label">Все слова</span><span class="badge">27</span></button>
+   <button id="nav-words" aria-label="Все слова" title="Все слова"><span data-icon="grid"></span><span class="nav-label">Все слова</span><span class="badge">43</span></button>
    <button id="nav-hard" aria-label="Сложные слова" title="Сложные слова"><span data-icon="bookmark"></span><span class="nav-label">Сложные слова</span></button>
   </nav></div>
   <div class="side-note"><div class="seed" aria-hidden="true">🌱</div><strong>Понемногу — каждый день</strong><p>Несколько минут практики сегодня — больше уверенности завтра.</p></div>
@@ -49,29 +50,29 @@
  </aside>
  <main class="main" id="main">
   <div class="topbar"><div class="crumb"><span data-icon="home"></span><span>Русский язык</span><span>›</span><span>Словарные слова</span></div><span class="grade"><span data-icon="cap"></span>6 класс</span></div>
-  <header class="page-heading"><div><p class="eyebrow">МАЛЕНЬКИЕ ШАГИ. БОЛЬШИЕ ЗНАНИЯ.</p><h1>Словарные слова</h1><p class="intro">27 слов, немного практики — и всё получится.</p></div><div class="heading-symbol" aria-hidden="true">а</div></header>
+  <header class="page-heading"><div><p class="eyebrow">МАЛЕНЬКИЕ ШАГИ. БОЛЬШИЕ ЗНАНИЯ.</p><h1>Словарные слова</h1><p class="intro">43 слова, немного практики — и всё получится.</p></div><div class="heading-symbol" aria-hidden="true">а</div></header>
   <section class="progress-banner" aria-label="Общий прогресс">
    <div class="progress-ring"><svg viewBox="0 0 68 68" aria-hidden="true"><circle class="track" cx="34" cy="34" r="30"/><circle class="fill" id="ring" cx="34" cy="34" r="30"/></svg><span id="percent">0%</span></div>
    <div class="banner-copy"><h2 id="progress-title">У каждого слова есть свой секрет</h2><p id="progress-subtitle">Открой карточку. Заметь буквы. Запомни слово.</p></div>
-   <div class="banner-right"><div class="banner-numbers"><span>Уже выучено</span><strong><span id="mastered">0</span> из 27</strong></div><div class="progress-track"><div class="progress-fill" id="mastered-bar"></div></div></div><span class="banner-decoration" aria-hidden="true">Бб</span>
+   <div class="banner-right"><div class="banner-numbers"><span>Уже выучено</span><strong><span id="mastered">0</span> из 43</strong></div><div class="progress-track"><div class="progress-fill" id="mastered-bar"></div></div></div><span class="banner-decoration" aria-hidden="true">Бб</span>
   </section>
   <p id="migration-note" class="migration-note hidden" role="status"><span id="migration-text"></span><button id="dismiss-migration" type="button">Понятно</button></p>
   <div class="workspace">
    <section class="study-panel" id="study" aria-label="Тренировка слов">
     <div class="mode-tabs" role="group" aria-label="Режим тренировки"><button class="active" id="mode-cards" aria-pressed="true"><span data-icon="layers"></span>Карточки</button><button id="mode-input" aria-pressed="false"><span data-icon="pencil"></span>Пропущенные буквы</button><button id="mode-dictation" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m11 5-6 4H2v6h3l6 4zM15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14"/></svg>Диктант</button></div>
     <div class="study-card" id="exercise"></div>
-    <div class="session-bar"><div class="session-progress"><span id="session-count">0 из 27 пройдено</span><span class="session-line" aria-hidden="true"><i id="session-fill"></i></span></div><button class="shuffle" id="shuffle"><span data-icon="shuffle"></span>Перемешать</button></div>
+    <div class="session-bar"><div class="session-progress"><span id="session-count">0 из 43 пройдено</span><span class="session-line" aria-hidden="true"><i id="session-fill"></i></span></div><button class="shuffle" id="shuffle"><span data-icon="shuffle"></span>Перемешать</button></div>
    </section>
    <aside class="right-column" aria-label="Твои результаты">
     <section class="mini-panel"><div class="mini-heading"><span data-icon="target"></span><h2>Маленькая цель на день</h2></div><div class="daily-value"><span id="daily-count">0</span><small> / 10 слов</small></div><p id="daily-text">Всего несколько минут для себя и новых знаний.</p><div class="daily-track"><i id="daily-bar"></i></div></section>
-    <section class="mini-panel learning-guide" id="learning-guide" aria-labelledby="learning-guide-title"><div class="mini-heading"><h2 id="learning-guide-title">Как выучить слово</h2></div><p>Успешно пройди каждый режим:</p><ul class="learning-requirements"><li><span>Карточки</span><strong>1 раз</strong></li><li><span>Пропущенные буквы</span><strong>2 раза</strong></li><li><span>Диктант</span><strong>2 раза</strong></li></ul></section>
+    <section class="mini-panel learning-guide" id="learning-guide" aria-labelledby="learning-guide-title"><div class="mini-heading"><h2 id="learning-guide-title">Как выучить слово</h2></div><ul class="learning-requirements"><li><span>Карточки</span><strong>1 раз</strong></li><li><span>Пропущенные буквы</span><strong>2 подряд</strong></li><li><span>Диктант</span><strong>2 подряд</strong></li></ul></section>
     <div class="tip"><span data-icon="bulb"></span><p><strong>Маленький секрет</strong>Проговори слово по слогам и представь, как пишется каждая буква.</p></div>
    </aside>
   </div>
   <section class="collection" id="collection" aria-labelledby="collection-title">
  <details id="collection-details">
-  <summary class="collection-summary"><span class="collection-summary-copy"><span class="collection-heading" id="collection-title">Твоя коллекция слов <span class="collection-total">/ 27</span></span><span class="collection-summary-note">Слова скрыты во время тренировки.</span></span><span class="collection-toggle"><span class="closed-label">Открыть</span><span class="open-label">Свернуть</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></summary>
-  <div id="collection-body" class="collection-body"><div class="section-top"><div class="section-title"><p>Нажми на слово, чтобы потренировать его отдельно.</p></div><label class="search"><span data-icon="search"></span><input id="search" type="search" placeholder="Найти слово…" aria-label="Найти слово" autocomplete="off"></label></div><div class="word-grid" id="word-grid"></div><div class="legend"><span><i></i>Ещё учим</span><span><i class="green"></i>Выучено: карточки 1 · буквы 2 · диктант 2</span><span><i class="amber"></i>Нужно повторить</span></div></div>
+  <summary class="collection-summary"><span class="collection-summary-copy"><span class="collection-heading" id="collection-title">Твоя коллекция слов <span class="collection-total">/ <span id="collection-total">43</span></span></span><span class="collection-summary-note">Слова скрыты во время тренировки.</span></span><span class="collection-toggle"><span class="closed-label">Открыть</span><span class="open-label">Свернуть</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span></summary>
+  <div id="collection-body" class="collection-body"><div class="section-top"><div class="section-title"><p>Нажми на слово, чтобы потренировать его отдельно.</p></div><label class="search"><span data-icon="search"></span><input id="search" type="search" placeholder="Найти слово…" aria-label="Найти слово" autocomplete="off"></label></div><div class="word-grid" id="word-grid"></div><div class="legend"><span><i></i>Ещё учим</span><span><i class="green"></i>Выучено после 1 зачёта в карточках и 2 верных ответов подряд в каждом письменном режиме</span><span><i class="amber"></i>Нужно повторить</span></div></div>
  </details>
 </section>
 <section class="transfer-panel" aria-labelledby="transfer-title">
@@ -120,7 +121,23 @@ const WORDS=[
  {word:'талант',gaps:[1],hint:'Выдающаяся способность к какому-либо делу.',sentence:'У неё настоящий {талант} к музыке.',note:'Та-лант: в первом слоге А.'},
  {word:'телеграмма',gaps:[1,3,7,8],hint:'Короткое сообщение, передаваемое по телеграфу.',sentence:'Утром пришла поздравительная {телеграмма}.',note:'Те-ле-грам-ма: две Е в начале и две М в середине.'},
  {word:'терраса',gaps:[1,2,3,5],hint:'Открытая площадка для отдыха рядом с домом.',sentence:'Перед домом была просторная {терраса}.',note:'Тер-ра-са: Е в начале, две Р и одна С.'},
- {word:'типография',gaps:[1,3],hint:'Предприятие, где печатают книги, журналы и другие издания.',sentence:'Новая {типография} напечатала учебники.',note:'Ти-по-гра-фи-я: начало ТИПО-, затем ГРАФИ-.'}
+ {word:'типография',gaps:[1,3],hint:'Предприятие, где печатают книги, журналы и другие издания.',sentence:'Новая {типография} напечатала учебники.',note:'Ти-по-гра-фи-я: начало ТИПО-, затем ГРАФИ-.'},
+ {word:'трибуна',gaps:[2,4],hint:'Возвышение, с которого выступают перед слушателями.',sentence:'На сцене стояла {трибуна} с микрофоном.',note:'Раздели слово на части ТРИ-БУ-НА. В первых двух частях пишутся И и У.'},
+ {word:'триста',gaps:[2,5],hint:'Число 300.',sentence:'В забеге участвовало {триста} человек.',note:'Запомни две части слова: ТРИ и СТА.'},
+ {word:'троллейбус',gaps:[2,3,4,5,6],hint:'Городской транспорт, который получает электричество от проводов над дорогой.',sentence:'К остановке подъехал {троллейбус}.',note:'Пиши ТРОЛЛЕЙ-БУС. После О идут две Л, затем ЕЙ.'},
+ {word:'учреждение',gaps:[0,3,6],hint:'Организация, которая выполняет определённую работу, например библиотека или школа.',sentence:'В районе открылось новое медицинское {учреждение}.',note:'Запомни начало УЧРЕ- и продолжение -ЖДЕНИЕ. В обеих частях есть Е.'},
+ {word:'фасоль',gaps:[1,5],hint:'Растение со стручками и съедобными семенами.',sentence:'На грядке выросла {фасоль}.',note:'В начале пиши ФА-, а после Л поставь мягкий знак.'},
+ {word:'физиономия',gaps:[1,3,4,6],hint:'Разговорное название лица человека, часто с заметным выражением.',sentence:'Его удивлённая {физиономия} рассмешила друзей.',note:'Раздели слово на части ФИ-ЗИ-О-НО-МИ-Я. После Ф и З пиши И, а вокруг Н — О.'},
+ {word:'центнер',gaps:[1,3,5],hint:'Единица массы, равная ста килограммам.',sentence:'В мешках был ровно {центнер} зерна.',note:'Запомни части ЦЕНТ-НЕР. В обеих частях пишется Е.'},
+ {word:'четыреста',gaps:[1,3,5,8],hint:'Число 400.',sentence:'До школы осталось {четыреста} метров.',note:'Запомни две части слова: ЧЕТЫРЕ и СТА.'},
+ {word:'юный',gaps:[1],hint:'Совсем молодой, ещё ребёнок или подросток.',sentence:'На соревнования приехал {юный} шахматист.',note:'В слове ЮНЫЙ одна буква Н.'},
+ {word:'штукатур',gaps:[2,4,6],hint:'Мастер, который выравнивает стены строительным раствором.',sentence:'В коридоре {штукатур} выровнял стену.',note:'Раздели слово на части ШТУ-КА-ТУР. Гласные идут в порядке У, А, У.'},
+ {word:'штукатурить',gaps:[2,4,6],hint:'Покрывать стену или потолок строительным раствором, чтобы выровнять поверхность.',sentence:'Мастер начал {штукатурить} стену.',note:'Запомни ШТУ-КА-ТУР, как в слове «штукатур», и добавь ИТЬ.'},
+ {word:'эвкалипт',gaps:[0,3,5],hint:'Дерево с душистыми листьями, которыми питаются коалы.',sentence:'В оранжерее растёт {эвкалипт}.',note:'Раздели слово на части ЭВ-КА-ЛИПТ. Гласные идут в порядке Э, А, И.'},
+ {word:'экономить',gaps:[0,2,4],hint:'Бережно расходовать деньги, воду, электричество или другие ресурсы.',sentence:'Мы стараемся {экономить} воду.',note:'Запомни Э-КО-НО-МИТЬ. Слово начинается с Э, затем идут два слога с О.'},
+ {word:'экскаватор',gaps:[0,1,2,4,6],hint:'Строительная машина с ковшом, которая копает землю.',sentence:'На стройке работал {экскаватор}.',note:'Запомни части ЭКС-КА-ВА-ТОР. После Э пишется КС, а в КА и ВА — буква А.'},
+ {word:'эмблема',gaps:[0,4],hint:'Рисунок или знак, по которому узнают команду или организацию.',sentence:'На форме появилась новая {эмблема}.',note:'Запомни ЭМ-БЛЕ-МА. В начале пишется Э, после БЛ — Е.'},
+ {word:'январский',gaps:[0,3,5],hint:'Связанный с первым месяцем года.',sentence:'На дворе стоял {январский} мороз.',note:'Январь → январский. Сохрани основу ЯНВАР- и добавь СКИЙ.'}
 ];
 // Векторные мнемоники встроены в страницу: не требуют загрузки картинок.
 const MNEMONICS = [
@@ -150,7 +167,23 @@ const MNEMONICS = [
  {word:'талант',scene:'stage',letters:'А',caption:'ТАлант: артист стоит под лучами софитов, которые образуют большую А.',alt:'Артист на сцене под лучами прожекторов в форме буквы А.'},
  {word:'телеграмма',scene:'telegram',letters:'ММ',caption:'ТЕлЕграмма: две марки Е–Е и две телеграфные мачты М–М. Две Е и две М.',alt:'Телеграмма с двумя марками Е и двумя мачтами в форме М.'},
  {word:'терраса',scene:'terrace',letters:'РР',caption:'ТЕрраса: Е на крыше, две опоры Р–Р и один стул С. Две Р, одна С.',alt:'Терраса с буквой Е на крыше, двумя опорами в форме Р и одной буквой С у стула.'},
- {word:'типография',scene:'printer',letters:'ТИПО',caption:'ТИпОграфия: печатный станок выпускает листы ТИПО. Запомни И, затем О.',alt:'Печатный станок выпускает лист с крупной надписью ТИПО.'}
+ {word:'типография',scene:'printer',letters:'ТИПО',caption:'ТИпОграфия: печатный станок выпускает листы ТИПО. Запомни И, затем О.',alt:'Печатный станок выпускает лист с крупной надписью ТИПО.'},
+ {word:'трибуна',scene:'lectern',letters:'И · У',caption:'Оратор подходит к трибуне. На табличке ТРИ, под ней буква У. В слове «трИбУна» сначала И, затем У.',alt:'Трибуна с микрофоном, табличкой ТРИ и большой буквой У.'},
+ {word:'триста',scene:'threeHundred',letters:'ТРИСТА',caption:'Три стопки по сто дают триста. Слово «триста» пишется слитно, на конце А.',alt:'Три стопки с числами 100. Ниже написано ТРИСТА, буква А выделена.'},
+ {word:'троллейбус',scene:'trolleybus',letters:'ОЛЛЕЙ',caption:'Круглое колесо напоминает О, две штанги на крыше напоминают о двух Л, а в окошке видны ЕЙ. Собери трОЛЛЕЙбус.',alt:'Троллейбус с круглым колесом, двумя штангами и табличкой ЕЙ.'},
+ {word:'учреждение',scene:'institution',letters:'УЧРЕ',caption:'Представь здание учреждения. На крыше большая У, на двери Е. Запомни начало УЧРЕ.',alt:'Здание учреждения с буквой У на крыше и буквой Е на двери.'},
+ {word:'фасоль',scene:'beans',letters:'А',caption:'На бирке у стручка фасоли большая А. Так проще вспомнить фАсоль.',alt:'Стручок фасоли и бирка с крупной буквой А.'},
+ {word:'физиономия',scene:'face',letters:'И · И · О',caption:'Представь смешную физиономию с буквами И в обоих глазах и круглым ртом О. Это первые три гласные в слове «физиономия».',alt:'Весёлое лицо с буквами И в двух глазах и круглым ртом в форме О.'},
+ {word:'центнер',scene:'scales',letters:'Е',caption:'На весах сто килограммов, это один центнер. На гире буква Е напоминает, как пишется цЕнтнер.',alt:'Весы показывают 100 кг, на гире выделена буква Е.'},
+ {word:'четыреста',scene:'fourHundred',letters:'Е · Ы · А',caption:'Четыре стопки по сто дают четыреста. Запомни Е и Ы в начале и А на конце: чЕтЫрестА.',alt:'Четыре стопки с числами 100. В слове ЧЕТЫРЕСТА выделены буквы Е, Ы и А.'},
+ {word:'юный',scene:'youngRunner',letters:'Н',caption:'У юного бегуна на майке одна буква Н. В слове «юный» тоже одна Н.',alt:'Юный бегун с одной буквой Н на майке.'},
+ {word:'штукатур',scene:'plaster',letters:'У · А · У',caption:'У штукатура два ведра с буквами У, а между ними шпатель с буквой А. Запомни штУкАтУр.',alt:'Два ведра с буквами У, между ними шпатель с буквой А.'},
+ {word:'штукатурить',scene:'plaster',letters:'У · А · У',caption:'Штукатурить стену помогает шпатель с буквой А. Вёдра с У по бокам напоминают порядок гласных в начале слова: штУкАтУрить.',alt:'У стены стоят два ведра с У и шпатель с А, которым наносят штукатурку.'},
+ {word:'эвкалипт',scene:'eucalyptus',letters:'Э · А · И',caption:'На ветке эвкалипта три листа с буквами Э, А и И. Вспомни их по порядку: ЭвкАлИпт.',alt:'Ветка эвкалипта с листьями, подписанными Э, А и И.'},
+ {word:'экономить',scene:'savings',letters:'Э · О',caption:'На копилке буква Э, а монета круглая, как О. Эти две подсказки напоминают начало «ЭкОномить».',alt:'Копилка с буквой Э и круглой монетой в форме О.'},
+ {word:'экскаватор',scene:'excavator',letters:'ЭКС · А · А',caption:'На кабине надпись ЭКС. На стреле и ковше по одной А. Собери ЭКСкАвАтор.',alt:'Экскаватор с надписью ЭКС на кабине и буквами А на стреле и ковше.'},
+ {word:'эмблема',scene:'emblem',letters:'Э · Е',caption:'На значке Э, на ленте под ним Е. Запомни, какая буква идёт первой в слове «ЭмблЕма».',alt:'Значок с буквой Э и лента с буквой Е.'},
+ {word:'январский',scene:'calendar',letters:'Я',caption:'На январском листке календаря большая Я. «Январский» начинается с Я, как «январь».',alt:'Январский листок календаря со снежинкой и выделенной первой буквой Я.'}
 ];
 const mnemonicEscape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function mnemonicDrawing(scene) {
@@ -188,6 +221,141 @@ function mnemonicDrawing(scene) {
   case 'telegram':s='<rect x="26" y="55" width="180" height="85" rx="8" fill="'+C.paper+'" stroke="'+C.purple+'" stroke-width="3"/>'+text(116,116,'ТЕЛЕГРАММА',15,C.purple)+'<g fill="'+C.mint+'" stroke="'+C.leaf+'" stroke-width="2"><rect x="39" y="63" width="30" height="31" rx="3"/><rect x="77" y="63" width="30" height="31" rx="3"/></g>'+text(54,87,'Е',24,C.leaf)+text(92,87,'Е',24,C.leaf)+'<path d="M130 51V22l14 15 14-15v29M170 51V22l14 15 14-15v29" fill="none" stroke="'+C.purple+'" stroke-width="5" stroke-linecap="round"/>';break;
   case 'terrace':s='<path d="M26 66h174l-18-23H47Z" fill="'+C.green+'"/><path d="M43 140V66h21q26 0 26 23T64 111H43M121 140V66h21q26 0 26 23t-26 22h-21" fill="none" stroke="'+C.purple+'" stroke-width="6"/>'+line(25,145,205,145,C.leaf,7)+'<path d="M35 151v10h28v10h28" fill="none" stroke="'+C.purple+'" stroke-width="4"/>'+text(183,131,'С',34,C.leaf)+text(55,56,'Е',19,C.paper);break;
   case 'printer':s='<rect x="57" y="26" width="108" height="64" rx="7" fill="'+C.paper+'" stroke="'+C.purple+'" stroke-width="3"/><rect x="30" y="65" width="165" height="66" rx="12" fill="'+C.lavender+'" stroke="'+C.purple+'" stroke-width="3"/><circle cx="176" cy="84" r="5" fill="'+C.leaf+'"/><path d="M62 109h101v48H62Z" fill="'+C.paper+'" stroke="'+C.purple+'" stroke-width="3"/>'+text(113,141,'ТИПО',25,C.purple);break;
+  case 'lectern':
+   s=`<path d="M108 61V36Q108 27 121 27H130" fill="none" stroke="${C.dark}" stroke-width="4" stroke-linecap="round"/>
+      <rect x="124" y="20" width="24" height="13" rx="6" fill="${C.purple}"/>
+      <path d="M51 60H173L162 77H62Z" fill="${C.purple}"/><path d="M69 77H155L145 149H79Z" fill="${C.lavender}" stroke="${C.purple}" stroke-width="3"/>
+      <rect x="82" y="85" width="60" height="28" rx="5" fill="${C.paper}"/>
+      <rect x="70" y="146" width="84" height="9" rx="4" fill="${C.purple}"/>`
+      +text(112,106,'ТРИ',18,C.purple)+text(112,139,'У',23,C.leaf);
+   break;
+  case 'threeHundred':
+  case 'fourHundred': {
+   const isFour=scene==='fourHundred';
+   const centers=isFour?[48,91,134,177]:[58,112,166];
+   const stackWidth=isFour?39:46;
+   s=centers.map(x=>{
+    const left=x-stackWidth/2;
+    return `<rect x="${left}" y="57" width="${stackWidth}" height="39" rx="5" fill="${C.lavender}" stroke="${C.purple}" stroke-width="2"/>
+            <rect x="${left}" y="49" width="${stackWidth}" height="38" rx="5" fill="${C.mint}" stroke="${C.leaf}" stroke-width="2"/>
+            <rect x="${left}" y="41" width="${stackWidth}" height="38" rx="5" fill="${C.paper}" stroke="${C.leaf}" stroke-width="2"/>`
+           +text(x,66,'100',15,C.leaf);
+   }).join('');
+   const label=isFour?'ЧЕТЫРЕСТА':'ТРИСТА';
+   const highlight=isFour?[1,3,8]:[5];
+   const letterBlocks=[...label].map((letter,index)=>{
+    const color=highlight.includes(index)?C.leaf:C.dark;
+    return `<tspan fill="${color}">${letter}</tspan>`;
+   }).join('');
+   s+=`<rect x="42" y="107" width="140" height="36" rx="9" fill="${C.paper}" stroke="${C.lavender}" stroke-width="2"/>`
+      +text(112,131,letterBlocks,isFour?17:21);
+   break;
+  }
+  case 'trolleybus':
+   s=line(33,33,194,33,C.purple,3)+line(88,74,125,34,C.purple,4)+line(121,74,158,34,C.purple,4)
+      +`<path d="M34 87Q34 72 47 72H162Q184 72 193 94L199 119Q201 132 184 132H43Q34 132 34 121Z" fill="${C.mint}" stroke="${C.leaf}" stroke-width="3"/>
+       <rect x="47" y="83" width="38" height="22" rx="4" fill="${C.paper}"/><rect x="92" y="83" width="37" height="22" rx="4" fill="${C.paper}"/>
+       <path d="M137 83H165Q178 83 185 105H137Z" fill="${C.paper}"/>
+       <rect x="139" y="108" width="43" height="19" rx="4" fill="${C.purple}"/>
+       <circle cx="68" cy="133" r="14" fill="${C.paper}" stroke="${C.purple}" stroke-width="6"/>
+       <circle cx="163" cy="133" r="12" fill="${C.dark}" stroke="${C.paper}" stroke-width="4"/>`
+      +text(161,122,'ЕЙ',13,'#fff');
+   break;
+  case 'institution':
+   s=`<path d="M31 76 112 29 193 76Z" fill="${C.lavender}" stroke="${C.purple}" stroke-width="3"/>
+      <rect x="42" y="77" width="140" height="67" rx="3" fill="${C.paper}" stroke="${C.purple}" stroke-width="3"/>
+      <rect x="90" y="86" width="44" height="57" rx="4" fill="${C.mint}" stroke="${C.leaf}" stroke-width="3"/>
+      <path d="M59 89V132M75 89V132M149 89V132M165 89V132" stroke="${C.lavender}" stroke-width="7" stroke-linecap="round"/>
+      <path d="M34 145H190M28 152H196" stroke="${C.purple}" stroke-width="5" stroke-linecap="round"/>`
+      +text(112,66,'У',23,C.purple)+text(112,121,'Е',29,C.leaf);
+   break;
+  case 'beans':
+   s=`<path d="M38 101Q50 75 74 83Q115 97 156 62Q175 42 194 50Q188 85 148 115Q95 158 46 131Q30 121 38 101Z" fill="${C.green}" stroke="${C.leaf}" stroke-width="3"/>
+      <path d="M43 112Q103 138 162 81" fill="none" stroke="${C.mint}" stroke-width="5" stroke-linecap="round"/>
+      <g fill="${C.paper}"><ellipse cx="71" cy="114" rx="10" ry="7" transform="rotate(15 71 114)"/><ellipse cx="106" cy="113" rx="10" ry="7" transform="rotate(-12 106 113)"/><ellipse cx="140" cy="101" rx="10" ry="7" transform="rotate(-28 140 101)"/></g>
+      <path d="M134 65Q145 33 168 36" fill="none" stroke="${C.purple}" stroke-width="3"/>
+      <path d="M130 34H164L173 47L164 65H130Q124 65 124 59V40Q124 34 130 34Z" fill="${C.lavender}" stroke="${C.purple}" stroke-width="2"/>`
+      +text(145,57,'А',23,C.purple);
+   break;
+  case 'face':
+   s=`<circle cx="113" cy="93" r="63" fill="${C.peach}" stroke="${C.purple}" stroke-width="3"/>
+      <path d="M60 66Q84 22 134 35Q158 41 168 65Q147 53 130 56Q94 64 60 66Z" fill="${C.lavender}" stroke="${C.purple}" stroke-width="3"/>
+      <ellipse cx="85" cy="86" rx="19" ry="16" fill="${C.paper}"/><ellipse cx="140" cy="86" rx="19" ry="16" fill="${C.paper}"/>
+      <circle cx="113" cy="119" r="15" fill="${C.paper}" stroke="${C.purple}" stroke-width="5"/>
+      <ellipse cx="70" cy="114" rx="10" ry="5" fill="#e7a393"/><ellipse cx="156" cy="114" rx="10" ry="5" fill="#e7a393"/>`
+      +text(85,93,'И',19,C.purple)+text(140,93,'И',19,C.purple);
+   break;
+  case 'scales':
+   s=`<rect x="34" y="107" width="158" height="37" rx="9" fill="${C.mint}" stroke="${C.leaf}" stroke-width="3"/>
+      <rect x="55" y="114" width="116" height="24" rx="5" fill="${C.paper}"/>
+      <path d="M78 104 90 62H136L148 104Z" fill="${C.lavender}" stroke="${C.purple}" stroke-width="3"/>
+      <path d="M99 63V53a14 14 0 0 1 28 0v10" fill="none" stroke="${C.purple}" stroke-width="5"/>`
+      +text(113,94,'Е',30,C.purple)+text(113,132,'100 кг',17,C.leaf);
+   break;
+  case 'youngRunner':
+   s=`<path d="M45 146Q82 132 178 143M52 154Q90 142 185 151" fill="none" stroke="${C.lavender}" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="122" cy="51" r="17" fill="${C.peach}"/>
+      <path d="M106 49Q102 30 122 32Q140 30 140 47Q124 40 106 49Z" fill="${C.dark}"/>
+      <path d="M101 71Q123 65 143 77L130 116 92 107Z" fill="${C.green}" stroke="${C.leaf}" stroke-width="3"/>
+      <path d="m104 77-24 14-15-10m77-1 18 12 13-14m-49 38 21 17 24-1m-62-19-12 26-24 5" fill="none" stroke="${C.purple}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="106" y="82" width="26" height="24" rx="4" fill="${C.paper}"/>`
+      +text(119,101,'Н',19,C.leaf);
+   break;
+  case 'plaster':
+   s=`<rect x="38" y="40" width="150" height="85" rx="8" fill="${C.peach}"/>
+      <path d="M40 60H186M40 81H186M40 102H186M65 42V60M103 42V60M143 42V60M84 60V81M124 60V81M162 60V81M64 81V102M104 81V102M144 81V102M85 102V124M125 102V124M163 102V124" stroke="${C.paper}" stroke-width="3"/>
+      <path d="M88 40H182Q188 40 188 47V107Q169 109 156 99Q147 92 140 97Q119 109 111 91Q103 72 88 67Z" fill="${C.mint}"/>
+      <path d="M32 111H78L73 151H37Z" fill="${C.lavender}" stroke="${C.purple}" stroke-width="3"/>
+      <path d="M148 111H194L189 151H153Z" fill="${C.lavender}" stroke="${C.purple}" stroke-width="3"/>
+      <path d="M33 110Q34 93 54 93Q74 93 77 110M149 110Q151 93 170 93Q190 93 193 110" fill="none" stroke="${C.purple}" stroke-width="3"/>
+      <path d="M112 108 87 144H137Z" fill="${C.paper}" stroke="${C.leaf}" stroke-width="3"/>
+      <rect x="106" y="90" width="12" height="21" rx="5" fill="${C.green}"/>`
+      +text(55,139,'У',22,C.purple)+text(112,139,'А',21,C.leaf)+text(171,139,'У',22,C.purple);
+   break;
+  case 'eucalyptus':
+   s=`<path d="M51 148Q99 122 169 45" fill="none" stroke="${C.leaf}" stroke-width="5" stroke-linecap="round"/>
+      <g fill="${C.mint}" stroke="${C.leaf}" stroke-width="2">
+       <path d="M89 125Q36 115 39 89Q59 73 80 94Q88 103 89 125Z"/>
+       <path d="M111 107Q132 68 172 77Q191 100 160 115Q139 122 111 107Z"/>
+       <path d="M152 65Q121 49 132 29Q154 18 170 36Q174 48 152 65Z"/>
+      </g>`
+      +text(62,109,'Э',22,C.leaf)+text(149,105,'А',22,C.leaf)+text(151,51,'И',20,C.leaf);
+   break;
+  case 'savings':
+   s=`<ellipse cx="107" cy="103" rx="62" ry="38" fill="${C.peach}" stroke="${C.purple}" stroke-width="3"/>
+      <path d="m145 78 10-21 18 30Z" fill="${C.peach}" stroke="${C.purple}" stroke-width="3"/>
+      <rect x="151" y="92" width="34" height="24" rx="9" fill="${C.peach}" stroke="${C.purple}" stroke-width="3"/>
+      <path d="M55 91q-16 4-18-6t7-10M72 135v14h14v-11M129 137v12h14v-17" fill="none" stroke="${C.purple}" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="151" cy="90" r="3" fill="${C.dark}"/>
+      <path d="M94 71h30" stroke="${C.dark}" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="109" cy="47" r="18" fill="${C.yellow}" stroke="${C.purple}" stroke-width="3"/>
+      <circle cx="109" cy="47" r="10" fill="none" stroke="${C.purple}" stroke-width="3"/>`
+      +text(105,119,'Э',31,C.purple);
+   break;
+  case 'excavator':
+   s=`<rect x="31" y="124" width="108" height="26" rx="13" fill="${C.purple}"/>
+      <rect x="40" y="131" width="90" height="12" rx="6" fill="${C.lavender}"/>
+      <path d="M42 122V75Q42 68 50 68H99L114 95V122Z" fill="${C.yellow}" stroke="${C.dark}" stroke-width="3"/>
+      <path d="M53 76H94L104 95H53Z" fill="${C.paper}" stroke="${C.dark}" stroke-width="2"/>
+      <path d="M112 107 145 49 176 62 182 112" fill="none" stroke="${C.dark}" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M112 107 145 49 176 62 182 112" fill="none" stroke="${C.yellow}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M160 117H200V140L193 147H173L160 136Z" fill="${C.yellow}" stroke="${C.dark}" stroke-width="3"/>
+      <circle cx="145" cy="49" r="12" fill="${C.paper}" stroke="${C.purple}" stroke-width="2"/>`
+      +text(78,115,'ЭКС',18,C.dark)+text(145,55,'А',15,C.purple)+text(180,139,'А',21,C.dark);
+   break;
+  case 'emblem':
+   s=`<path d="M112 31 173 52V94Q168 129 112 148Q57 129 51 94V52Z" fill="${C.lavender}" stroke="${C.purple}" stroke-width="3"/>
+      <path d="M112 45 159 61V91Q154 118 112 134Q71 118 65 91V61Z" fill="${C.paper}" stroke="${C.purple}" stroke-width="2"/>
+      <path d="M46 113H179L170 127 179 141H46L55 127Z" fill="${C.mint}" stroke="${C.leaf}" stroke-width="3"/>`
+      +text(112,101,'Э',40,C.purple)+text(112,135,'Е',23,C.leaf);
+   break;
+  case 'calendar':
+   s=`<rect x="42" y="43" width="142" height="105" rx="9" fill="${C.paper}" stroke="${C.purple}" stroke-width="3"/>
+      <path d="M42 64V52Q42 43 51 43H175Q184 43 184 52V64Z" fill="${C.purple}"/>
+      <path d="M73 34V50M151 34V50" stroke="${C.dark}" stroke-width="5" stroke-linecap="round"/>
+      <path d="M86 94v34m-15-25 30 17m0-17-30 17m64-25v26m-12-19 24 13m0-13-24 13" stroke="${C.blue}" stroke-width="3" stroke-linecap="round"/>`
+      +text(113,84,`<tspan fill="${C.purple}">Я</tspan>НВАРЬ`,20,C.dark);
+   break;
  }
  return floor+s;
 }
@@ -309,6 +477,70 @@ const DICTATION_PROMPTS = [
   {
     "word": "типография",
     "spoken": "типография."
+  },
+  {
+    "word": "трибуна",
+    "spoken": "трибуна."
+  },
+  {
+    "word": "триста",
+    "spoken": "триста."
+  },
+  {
+    "word": "троллейбус",
+    "spoken": "троллейбус."
+  },
+  {
+    "word": "учреждение",
+    "spoken": "учреждение."
+  },
+  {
+    "word": "фасоль",
+    "spoken": "фасоль."
+  },
+  {
+    "word": "физиономия",
+    "spoken": "физиономия."
+  },
+  {
+    "word": "центнер",
+    "spoken": "центнер."
+  },
+  {
+    "word": "четыреста",
+    "spoken": "четыреста."
+  },
+  {
+    "word": "юный",
+    "spoken": "юный."
+  },
+  {
+    "word": "штукатур",
+    "spoken": "штукатур."
+  },
+  {
+    "word": "штукатурить",
+    "spoken": "штукатурить."
+  },
+  {
+    "word": "эвкалипт",
+    "spoken": "эвкалипт."
+  },
+  {
+    "word": "экономить",
+    "spoken": "экономить."
+  },
+  {
+    "word": "экскаватор",
+    "spoken": "экскаватор."
+  },
+  {
+    "word": "эмблема",
+    "spoken": "эмблема."
+  },
+  {
+    "word": "январский",
+    "spoken": "январский."
   }
 ];
 
@@ -316,28 +548,55 @@ const $=id=>document.getElementById(id);
 const STORAGE_KEY='bukva-vocabulary-27-v1';
 const REQUIREMENTS={cards:1,input:2,dictation:2};
 const FILE_APP='bukva-vocabulary-progress';
+const PROGRESS_VERSION=3;
+const PREVIOUS_WORD_COUNT=27;
 const freshSuccesses=()=>({cards:0,input:0,dictation:0});
 const freshRecord=()=>({successes:freshSuccesses(),hard:false,attempts:0,legacyStreak:0});
-const freshState=()=>({version:2,words:{},daily:{},session:null,migrationNotice:false});
+const freshState=()=>({version:PROGRESS_VERSION,words:{},daily:{},session:null,migrationNotice:false});
 let storageOK=true,state=freshState();
 const integer=(v,min,max=Number.MAX_SAFE_INTEGER)=>Number.isSafeInteger(v)&&v>=min&&v<=max;
 const isMastered=r=>Object.keys(REQUIREMENTS).every(key=>r.successes[key]>=REQUIREMENTS[key]);
 function validRecord(r){return !!r&&!!r.successes&&Object.keys(REQUIREMENTS).every(key=>integer(r.successes[key],0,REQUIREMENTS[key]))&&typeof r.hard==='boolean'&&integer(r.attempts,Object.keys(REQUIREMENTS).reduce((sum,key)=>sum+(Number.isFinite(r.successes[key])?r.successes[key]:0),0))&&integer(r.legacyStreak===undefined?0:r.legacyStreak,0,3);}
 function copyRecord(r){return{successes:{cards:r.successes.cards,input:r.successes.input,dictation:r.successes.dictation},hard:r.hard,attempts:r.attempts,legacyStreak:r.legacyStreak||0};}
 function migrateLegacyRecord(r){return{successes:freshSuccesses(),hard:r.hard,attempts:r.attempts,legacyStreak:r.streak};}
-function validSession(s){
+function loadModeRecord(target,id,record,version){
+ const restored=copyRecord(record);
+ // В версии 2 верные ответы накапливались даже после ошибок.
+ if(version===2&&(restored.successes.input>0||restored.successes.dictation>0)){
+  restored.successes.input=0;
+  restored.successes.dictation=0;
+  target.migrationNotice=true;
+ }
+ target.words[id]=restored;
+}
+function validSession(s,wordCount=WORDS.length){
  if(!s||!Object.keys(REQUIREMENTS).includes(s.mode)||!['all','hard','single'].includes(s.scope)||!Array.isArray(s.queue))return false;
- const n=s.queue.length;if(n>WORDS.length||new Set(s.queue).size!==n||!s.queue.every(i=>integer(i,0,WORDS.length-1)))return false;
- if(s.scope==='all'&&n!==WORDS.length||s.scope==='single'&&n!==1)return false;
+ const n=s.queue.length;if(n>wordCount||new Set(s.queue).size!==n||!s.queue.every(i=>integer(i,0,wordCount-1)))return false;
+ if(s.scope==='all'&&n!==wordCount||s.scope==='single'&&n!==1)return false;
  return integer(s.position,0,n)&&integer(s.correct,0,n)&&integer(s.errors,0,n)&&s.correct+s.errors===s.position;
+}
+function expandSession(session,wordCount){
+ if(!validSession(session,wordCount))return null;
+ if(session.scope!=='all'||wordCount===WORDS.length)return session;
+ const newWordIds=WORDS.slice(wordCount).map((_,i)=>wordCount+i);
+ return {...session,queue:session.queue.concat(newWordIds)};
 }
 try{
  const raw=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');
- if(raw&&[1,2].includes(raw.version)&&raw.words&&raw.daily&&typeof raw.words==='object'&&typeof raw.daily==='object'){
-  state.migrationNotice=raw.version===2&&raw.migrationNotice===true;
-  for(let i=0;i<WORDS.length;i++){const r=raw.words[i];if(raw.version===2&&validRecord(r))state.words[i]=copyRecord(r);else if(raw.version===1&&r&&integer(r.streak,0,3)&&typeof r.hard==='boolean'){const legacy={streak:r.streak,hard:r.hard,attempts:integer(r.attempts,0)?Math.max(r.attempts,r.streak):r.streak};state.words[i]=migrateLegacyRecord(legacy);if(legacy.attempts>0)state.migrationNotice=true;}}
-  for(const [date,ids]of Object.entries(raw.daily))if(/^\d{4}-\d{2}-\d{2}$/.test(date)&&Array.isArray(ids)&&ids.every(i=>integer(i,0,WORDS.length-1)))state.daily[date]=[...new Set(ids)];
-  if(validSession(raw.session))state.session=raw.session;
+ if(raw&&[1,2,PROGRESS_VERSION].includes(raw.version)&&raw.words&&raw.daily&&typeof raw.words==='object'&&typeof raw.daily==='object'){
+  const wordCount=raw.version===PROGRESS_VERSION?WORDS.length:PREVIOUS_WORD_COUNT;
+  state.migrationNotice=raw.migrationNotice===true;
+  for(let i=0;i<wordCount;i++){
+   const r=raw.words[i];
+   if(raw.version!==1&&validRecord(r))loadModeRecord(state,i,r,raw.version);
+   else if(raw.version===1&&r&&integer(r.streak,0,3)&&typeof r.hard==='boolean'){
+    const legacy={streak:r.streak,hard:r.hard,attempts:integer(r.attempts,0)?Math.max(r.attempts,r.streak):r.streak};
+    state.words[i]=migrateLegacyRecord(legacy);
+    if(legacy.attempts>0)state.migrationNotice=true;
+   }
+  }
+  for(const [date,ids]of Object.entries(raw.daily))if(/^\d{4}-\d{2}-\d{2}$/.test(date)&&Array.isArray(ids)&&ids.every(i=>integer(i,0,wordCount-1)))state.daily[date]=[...new Set(ids)];
+  state.session=expandSession(raw.session,wordCount);
  }
 }catch{storageOK=false;}
 let mode='cards',scope='all',queue=[],position=0,revealed=false,checked=false,sessionCorrect=0,sessionErrors=0,toastTimer;
@@ -387,7 +646,25 @@ function renderExercise(){
 
 function letterLabel(n){return n===1?'букву':n<5?'буквы':'букв';}
 function revealAnswer(){if(revealed||position>=queue.length)return;revealed=true;const w=WORDS[queue[position]];$('display-word').innerHTML=highlighted(w);$('display-word').removeAttribute('role');$('display-word').removeAttribute('aria-label');$('card-answer').classList.remove('hidden');$('reveal').classList.add('hidden');document.querySelector('.enter-note').classList.add('hidden');$('know').disabled=false;$('unsure').disabled=false;announce('Правильное написание: '+w.word+'. '+w.note);$('know').focus({preventScroll:true});}
-function recordAnswer(correct){const id=queue[position],old=record(id),successes={...old.successes};if(correct)successes[mode]=Math.min(successes[mode]+1,REQUIREMENTS[mode]);const updated={successes,hard:true,attempts:old.attempts+1,legacyStreak:old.legacyStreak};updated.hard=correct?(isMastered(updated)?false:old.hard):true;state.words[id]=updated;const day=dayWords();if(!day.includes(id))day.push(id);state.daily={[todayKey()]:day};if(correct)sessionCorrect++;else sessionErrors++;save();updateStats();const done=position+1;$('session-count').textContent=done+' из '+queue.length+' пройдено';$('session-fill').style.width=(done/queue.length*100)+'%';$('shuffle').disabled=queue.length-done<2;}
+function recordAnswer(correct){
+ const id=queue[position],old=record(id),successes={...old.successes};
+ if(correct)successes[mode]=Math.min(successes[mode]+1,REQUIREMENTS[mode]);
+ else if(mode!=='cards')successes[mode]=0;
+ const updated={successes,hard:true,attempts:old.attempts+1,legacyStreak:old.legacyStreak};
+ updated.hard=correct?(isMastered(updated)?false:old.hard):true;
+ state.words[id]=updated;
+ const day=dayWords();
+ if(!day.includes(id))day.push(id);
+ state.daily={[todayKey()]:day};
+ if(correct)sessionCorrect++;
+ else sessionErrors++;
+ save();
+ updateStats();
+ const done=position+1;
+ $('session-count').textContent=done+' из '+queue.length+' пройдено';
+ $('session-fill').style.width=(done/queue.length*100)+'%';
+ $('shuffle').disabled=queue.length-done<2;
+}
 function rate(correct){if(!revealed||checked)return;checked=true;recordAnswer(correct);if(correct){nextWord();return;}$('card-memory').innerHTML='<p class="card-error-note">Слово добавлено в повторение. Посмотри на картинку и запомни буквы.</p>'+memoryPicture(queue[position]);$('card-memory').classList.remove('hidden');$('card-actions').innerHTML='<button class="btn btn-primary" id="next">'+(position===queue.length-1?'Посмотреть результат':'Следующее слово')+icon('arrow')+'</button>';$('next').onclick=nextWord;$('next').focus({preventScroll:true});announce('Слово добавлено в повторение. Картинка поможет запомнить написание.');}
 function learningProgress(id){const r=record(id);return '<div class="learning-steps" aria-label="Зачёты по режимам">'+[['cards','Карточки'],['input','Пропуски'],['dictation','Диктант']].map(([key,label])=>'<span class="learning-step'+(r.successes[key]>=REQUIREMENTS[key]?' complete':'')+'">'+label+' <strong>'+r.successes[key]+'/'+REQUIREMENTS[key]+'</strong></span>').join('')+'</div>';}
 function collapseCollection(){$('collection-details').open=false;}
@@ -425,10 +702,10 @@ function renderCompletion(){const hard=hardIds();const empty=queue.length===0;le
 function wordLabel(n){const tens=n%100,ones=n%10;return tens>=11&&tens<=14?'слов':ones===1?'слово':ones>=2&&ones<=4?'слова':'слов';}
 function updateStats(){
  const mastered=WORDS.filter((_,i)=>isMastered(record(i))).length,pct=Math.round(mastered/WORDS.length*100),daily=dayWords().length;
- $('mastered').textContent=mastered;$('percent').textContent=pct+'%';$('ring').style.strokeDashoffset=String(188.5*(1-mastered/27));$('mastered-bar').style.width=pct+'%';
- $('progress-title').textContent=mastered===27?'Все 27 слов тебе знакомы!':mastered?'С каждым словом — увереннее':'У каждого слова есть свой секрет';$('progress-subtitle').textContent=mastered===27?'Возвращайся время от времени, чтобы закрепить результат.':'Для каждого слова: карточки — 1, пропуски — 2, диктант — 2.';
+ $('mastered').textContent=mastered;$('percent').textContent=pct+'%';$('ring').style.strokeDashoffset=String(188.5*(1-mastered/WORDS.length));$('mastered-bar').style.width=pct+'%';
+ $('progress-title').textContent=mastered===WORDS.length?'Все слова выучены!':mastered?'С каждым словом — увереннее':'У каждого слова есть свой секрет';$('progress-subtitle').textContent=mastered===WORDS.length?'Возвращайся время от времени, чтобы закрепить результат.':'В карточках — 1 верный ответ. В пропусках и диктанте — по 2 подряд.';
  $('daily-count').textContent=daily;$('daily-bar').style.width=Math.min(daily/10*100,100)+'%';$('daily-text').textContent=daily>=10?'Цель достигнута! Ты отлично потрудился сегодня.':'Повтори 10 разных слов за день. До цели: '+(10-daily)+'.';
- $('migration-note').classList.toggle('hidden',!state.migrationNotice);$('migration-text').textContent='Старые попытки и сложные слова сохранены. В прежнем формате не было зачётов по отдельным режимам, поэтому новый учёт 1 + 2 + 2 начинается с нуля.';renderCollection();updateStorageStatus();
+ $('migration-note').classList.toggle('hidden',!state.migrationNotice);$('migration-text').textContent='Прежние попытки сохранены. Зачёты в карточках перенесены, если они были записаны отдельно. После обновления серии в пропусках и диктанте считаются заново.';renderCollection();updateStorageStatus();
 }
 function renderCollection(){const term=$('search').value.trim().toLocaleLowerCase('ru');const list=WORDS.map((w,i)=>({w,i})).filter(({w})=>w.word.includes(term));$('word-grid').innerHTML=list.length?list.map(({w,i})=>{const r=record(i),mastered=isMastered(r),started=Object.values(r.successes).some(n=>n>0),status=mastered?'mastered':r.hard?'hard':started?'started':'';const counts='Карточки '+r.successes.cards+'/1 · Пропуски '+r.successes.input+'/2 · Диктант '+r.successes.dictation+'/2';return '<button class="word-chip '+status+'" data-word="'+i+'" aria-label="'+w.word+'. '+(mastered?'Выучено. ':r.hard?'Сложное слово. ':'')+counts+'"><span class="status" aria-hidden="true">'+(mastered?'✓':r.hard?'!':started?'·':'')+'</span><span class="chip-text">'+w.word+'<small class="chip-meta">'+counts+'</small></span></button>';}).join(''):'<p class="empty-state">Такого слова в коллекции нет.</p>';
  $('word-grid').querySelectorAll('[data-word]').forEach(btn=>btn.onclick=()=>{startSession('single',[Number(btn.dataset.word)]);scrollToStudy();});}
@@ -439,23 +716,27 @@ function resumeAll(){collapseCollection();if(scope!=='all')startSession('all');e
 function resetProgress(){state=freshState();$('reset-dialog').close();$('search').value='';startSession('all');toast('Прогресс сброшен. Можно начать заново.');}
 
 // Переносимый файл содержит слова вместо внутренних номеров и позицию ПОСЛЕ засчитанного ответа.
-function buildProgressFile(){const s=sessionSnapshot();return{app:FILE_APP,formatVersion:2,exportedAt:new Date().toISOString(),requirements:{...REQUIREMENTS},migrationNotice:state.migrationNotice,words:WORDS.map((w,i)=>({word:w.word,...copyRecord(record(i))})),daily:{date:todayKey(),words:dayWords().map(i=>WORDS[i].word)},cycle:{...s,queue:s.queue.map(i=>WORDS[i].word)}};}
+function buildProgressFile(){const s=sessionSnapshot();return{app:FILE_APP,formatVersion:PROGRESS_VERSION,exportedAt:new Date().toISOString(),requirements:{...REQUIREMENTS},migrationNotice:state.migrationNotice,words:WORDS.map((w,i)=>({word:w.word,...copyRecord(record(i))})),daily:{date:todayKey(),words:dayWords().map(i=>WORDS[i].word)},cycle:{...s,queue:s.queue.map(i=>WORDS[i].word)}};}
 function parseProgressFile(data){
  const fail=message=>{throw new Error(message);};
- if(!data||data.app!==FILE_APP||![1,2].includes(data.formatVersion))fail('Это не файл результатов тренажёра «Буква» подходящей версии.');
- const legacy=data.formatVersion===1;
+ if(!data||data.app!==FILE_APP||![1,2,PROGRESS_VERSION].includes(data.formatVersion))fail('Это не файл результатов тренажёра «Буква» подходящей версии.');
+ const version=data.formatVersion,legacy=version===1;
+ const wordCount=version===PROGRESS_VERSION?WORDS.length:PREVIOUS_WORD_COUNT;
  if(legacy?data.streakTarget!==3:!data.requirements||Object.keys(REQUIREMENTS).some(key=>data.requirements[key]!==REQUIREMENTS[key]))fail('В файле указаны другие условия освоения слов.');
- if(!Array.isArray(data.words)||data.words.length!==WORDS.length)fail('В файле должен быть результат для каждого из 27 слов.');
+ if(!Array.isArray(data.words)||data.words.length!==wordCount)fail('В файле должен быть результат для каждого слова из соответствующей версии тренажёра.');
  const next=freshState(),seen=new Set();next.migrationNotice=!legacy&&data.migrationNotice===true;
  for(const r of data.words){
-  const i=r&&WORDS.findIndex(w=>w.word===r.word);if(!r||i<0||seen.has(i))fail('В файле есть неизвестные или повторяющиеся слова.');seen.add(i);
+  const i=r&&WORDS.findIndex(w=>w.word===r.word);if(!r||!integer(i,0,wordCount-1)||seen.has(i))fail('В файле есть неизвестные или повторяющиеся слова.');seen.add(i);
   if(legacy){if(!integer(r.streak,0,3)||typeof r.hard!=='boolean'||!integer(r.attempts,r.streak)||r.streak===3&&r.hard)fail('В файле повреждены прежние результаты слов.');next.words[i]=migrateLegacyRecord(r);if(r.attempts>0)next.migrationNotice=true;}
-  else{if(!validRecord(r))fail('В файле повреждены зачёты по режимам.');next.words[i]=copyRecord(r);}
+  else{if(!validRecord(r))fail('В файле повреждены зачёты по режимам.');loadModeRecord(next,i,r,version);}
  }
- const d=data.daily;if(!d||typeof d.date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(d.date)||Number.isNaN(Date.parse(d.date))||new Date(d.date).toISOString().slice(0,10)!==d.date||!Array.isArray(d.words)||d.words.length>WORDS.length||new Set(d.words).size!==d.words.length)fail('В файле повреждён результат за день.');
- const dailyIds=d.words.map(word=>WORDS.findIndex(w=>w.word===word));if(dailyIds.includes(-1))fail('В файле есть незнакомые слова.');next.daily[d.date]=dailyIds;
- const c=data.cycle;if(!c||!Array.isArray(c.queue)||c.queue.length>WORDS.length||legacy&&c.mode==='dictation')fail('В файле повреждён порядок тренировки.');
- const s={mode:c.mode,scope:c.scope,queue:c.queue.map(word=>WORDS.findIndex(w=>w.word===word)),position:c.position,correct:c.correct,errors:c.errors};if(!validSession(s))fail('В файле повреждён порядок или счётчики тренировки.');next.session=s;return next;
+ const d=data.daily;if(!d||typeof d.date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(d.date)||Number.isNaN(Date.parse(d.date))||new Date(d.date).toISOString().slice(0,10)!==d.date||!Array.isArray(d.words)||d.words.length>wordCount||new Set(d.words).size!==d.words.length)fail('В файле повреждён результат за день.');
+ const dailyIds=d.words.map(word=>WORDS.findIndex(w=>w.word===word));if(!dailyIds.every(i=>integer(i,0,wordCount-1)))fail('В файле есть незнакомые слова.');next.daily[d.date]=dailyIds;
+ const c=data.cycle;if(!c||!Array.isArray(c.queue)||c.queue.length>wordCount||legacy&&c.mode==='dictation')fail('В файле повреждён порядок тренировки.');
+ const s={mode:c.mode,scope:c.scope,queue:c.queue.map(word=>WORDS.findIndex(w=>w.word===word)),position:c.position,correct:c.correct,errors:c.errors};
+ next.session=expandSession(s,wordCount);
+ if(!next.session)fail('В файле повреждён порядок или счётчики тренировки.');
+ return next;
 }
 
 function applyProgressFile(data){const next=parseProgressFile(data);fileHandle=null;writeRevision++;state=next;restoreSession(next.session);save();fileStatus('Результаты загружены. Продолжаем с того места, где остановились. Для записи в этот файл нажмите «Сохранить в файл».');toast('Результаты загружены. Можно продолжать тренировку.');}
