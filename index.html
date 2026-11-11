@@ -28,6 +28,7 @@
 
 
 
+
 /* ADDITIONS: MEMORY AND TRANSFER */
 .memory-picture{margin:15px 0 0;display:grid;grid-template-columns:minmax(160px,.95fr) minmax(150px,1fr);align-items:center;gap:16px;padding:12px;background:#faf8fe;border:1px solid #ece5f7;border-radius:16px;text-align:left;color:#70667f;width:100%}.memory-visual{min-width:0}.memory-visual svg{width:100%;height:auto;display:block;stroke:none;stroke-width:0;overflow:visible}.memory-picture figcaption{font-size:12px;line-height:1.75}.memory-picture figcaption strong{display:block;font-size:11px;color:#81709e;margin-bottom:5px}.memory-picture figcaption span{display:block}.feedback .memory-picture{background:#fffafd;border-color:#f1e2ee}.feedback .memory-picture figcaption{color:#78667c}.card-answer-mistake{margin-top:15px;font-size:12px;color:#9b6851}.card-answer-mistake strong{color:#9b6851}@media(max-width:600px){.memory-picture{grid-template-columns:1fr;gap:8px;padding:12px}.memory-visual{max-width:320px;width:100%;margin:auto}.memory-picture figcaption{font-size:12px;padding:0 3px 3px}.memory-picture figcaption strong{margin-bottom:3px}}
 
@@ -608,8 +609,8 @@ function validSession(s,wordCount=WORDS.length){
  if(!s||!Object.keys(REQUIREMENTS).includes(s.mode)||![...WORD_FILTERS,'hard','single'].includes(s.scope)||!Array.isArray(s.queue))return false;
  if(s.filter!==undefined&&!WORD_FILTERS.includes(s.filter))return false;
  const n=s.queue.length;if(n>wordCount||new Set(s.queue).size!==n||!s.queue.every(i=>integer(i,0,wordCount-1)))return false;
- if(s.scope==='all'&&s.mode!=='dictation'&&n!==wordCount)return false;
- if(s.scope==='single'&&(n>1||n===0&&s.mode!=='dictation'))return false;
+ if(s.scope==='all'&&s.mode==='cards'&&n!==wordCount)return false;
+ if(s.scope==='single'&&(n>1||n===0&&s.mode==='cards'))return false;
  return integer(s.position,0,n)&&integer(s.correct,0,n)&&integer(s.errors,0,n)&&s.correct+s.errors===s.position;
 }
 function expandSession(session,wordCount){
@@ -642,12 +643,15 @@ let fileHandle=null,fileWriteChain=Promise.resolve(),writeRevision=0,fileBusy=fa
 ICONS.speaker='<path d="m11 4-5 4H3v8h3l5 4zM15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14"/>';
 const record=i=>state.words[i]||freshRecord();
 const hardIds=()=>WORDS.map((_,i)=>i).filter(i=>record(i).hard);
-const DICTATION_RULE='Для диктанта нужен зачёт в карточках и два верных ответа подряд в пропусках.';
-function dictationReady(id){
+const MODE_ACCESS={
+ input:{rule:'Для пропущенных букв нужен зачёт в карточках.',closed:'Пропущенные буквы пока закрыты',wordClosed:'Это слово пока недоступно в пропусках'},
+ dictation:{rule:'Для диктанта нужен зачёт в карточках и два верных ответа подряд в пропусках.',closed:'Диктант пока закрыт',wordClosed:'Это слово пока недоступно в диктанте'}
+};
+function canPractise(id){
+ if(mode==='cards')return true;
  const {cards,input}=record(id).successes;
- return cards>=REQUIREMENTS.cards&&input>=REQUIREMENTS.input;
+ return cards>=REQUIREMENTS.cards&&(mode==='input'||input>=REQUIREMENTS.input);
 }
-function canPractise(id){return mode!=='dictation'||dictationReady(id);}
 function matchesScope(id){return canPractise(id)&&(scope!=='unlearned'||!isMastered(record(id)));}
 const todayKey=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
 function dayWords(){const a=state.daily[todayKey()];return Array.isArray(a)?a:[];}
@@ -679,7 +683,7 @@ function startSession(newScope=wordFilter,ids=null){
 function restoreSession(s){
  mode=s.mode;scope=s.scope;wordFilter=WORD_FILTERS.includes(scope)?scope:s.filter??'all';
  queue=s.queue.slice();position=s.position;sessionCorrect=s.correct;sessionErrors=s.errors;revealed=false;checked=false;
- // Старые сохранения могли содержать в диктанте ещё недоступные слова.
+ // В прежних сохранениях в письменном круге могли остаться ещё недоступные слова.
  filterRemaining();
  setNav(scope==='hard'?'hard':'study');renderExercise();updateStats();
 }
@@ -690,8 +694,8 @@ function renderWordFilter(){
   button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
  }
  const help=$('word-filter-help');
- help.textContent=DICTATION_RULE;
- help.classList.toggle('hidden',mode!=='dictation'||queue.length===0);
+ help.textContent=MODE_ACCESS[mode]?.rule??'';
+ help.classList.toggle('hidden',mode==='cards'||queue.length===0);
 }
 function renderExercise(){
  stopWordAudio();heard=false;collapseCollection();renderWordFilter();
@@ -746,7 +750,7 @@ function collapseCollection(){$('collection-details').open=false;}
 function speechAvailable(){return !!window.speechSynthesis&&typeof window.SpeechSynthesisUtterance==='function';}
 function stopWordAudio(){audioGeneration++;if(currentAudio){currentAudio.onstart=null;currentAudio.onend=null;currentAudio.onerror=null;currentAudio=null;}if(speechAvailable())try{window.speechSynthesis.cancel();}catch{}}
 async function listenToWord(){
- if(mode!=='dictation'||position>=queue.length||!dictationReady(queue[position]))return;
+ if(mode!=='dictation'||position>=queue.length||!canPractise(queue[position]))return;
  stopWordAudio();if(!speechAvailable()){$('audio-status').textContent='Для диктанта нужен браузер с поддержкой русского озвучивания.';return;}
  const voices=window.speechSynthesis.getVoices(),russian=voices.filter(voice=>/^ru(?:[-_]|$)/i.test(voice.lang));
  if(!russian.length){$('audio-status').textContent=voices.length?'Русский голос не найден. Добавьте русский голос в настройках озвучивания устройства.':'Голоса ещё загружаются. Подожди немного и нажми кнопку снова.';return;}
@@ -759,7 +763,7 @@ async function listenToWord(){
 }
 function checkAnswer(event){
  event.preventDefault();if(checked||position>=queue.length)return;
- if(mode==='dictation'&&!dictationReady(queue[position]))return;
+ if(mode==='cards'||!canPractise(queue[position]))return;
  if(mode==='dictation'&&!heard){$('input-error').textContent='Сначала прослушай слово.';return;}
  const id=queue[position],w=WORDS[id],dictation=mode==='dictation';let value=$('answer').value.trim().toLocaleLowerCase('ru');if(!dictation)value=value.replace(/[\s,;._–—-]/g,'');
  if(!/^[а-яё]+$/.test(value)){$('input-error').textContent=value?'Используй только русские буквы.':dictation?'Напиши услышанное слово.':'Впиши пропущенные буквы или слово целиком.';$('answer').focus();return;}
@@ -780,21 +784,21 @@ function showCompletion({title,text,action,actionLabel,symbol,secondary}){
 }
 function renderEmptyRound(){
  const show=options=>showCompletion({symbol:'bookmark',...options});
- if(mode==='dictation'&&(scope==='single'||!WORDS.some((_,id)=>dictationReady(id)))){
-  show({title:scope==='single'?'Это слово пока недоступно в диктанте':'Диктант пока закрыт',text:DICTATION_RULE,
-   actionLabel:'К карточкам',action:()=>switchMode('cards'),secondary:{label:'К пропущенным буквам',action:()=>switchMode('input')}});
+ const access=MODE_ACCESS[mode];
+ if(access&&(scope==='single'||!WORDS.some((_,id)=>canPractise(id)))){
+  show({title:scope==='single'?access.wordClosed:access.closed,text:access.rule,
+   actionLabel:'К карточкам',action:()=>switchMode('cards'),
+   secondary:mode==='dictation'?{label:'К пропущенным буквам',action:()=>switchMode('input')}:null});
   return;
  }
  if(scope==='unlearned'){
-  const dictation=mode==='dictation';
-  show({title:dictation?'Нет невыученных слов для диктанта':'Все слова выучены!',
-   text:dictation?'Можно повторить доступные слова или открыть новые в карточках и пропусках.':'Можно повторить слова из коллекции.',
-   actionLabel:dictation?'Повторить доступные слова':'Повторить все слова',action:()=>setWordFilter('all')});
+  show({title:access?'Нет доступных невыученных слов':'Все слова выучены!',
+   text:access?access.rule:'Можно повторить слова из коллекции.',
+   actionLabel:access?'Повторить доступные слова':'Повторить все слова',action:()=>setWordFilter('all')});
   return;
  }
- const dictation=mode==='dictation';
- show({title:dictation?'Нет сложных слов для диктанта':'Сложных слов пока нет',
-  text:dictation?DICTATION_RULE:'Здесь появляются слова, в которых были ошибки, и слова с отметкой «Нужно повторить».',
+ show({title:access?'Нет доступных сложных слов':'Сложных слов пока нет',
+  text:access?.rule??'Здесь появляются слова, в которых были ошибки, и слова с отметкой «Нужно повторить».',
   actionLabel:'Вернуться к тренировке',action:()=>startSession(wordFilter)});
 }
 function renderCompletion(){
@@ -821,7 +825,7 @@ function renderCollection(){
   const status=mastered?'mastered':r.hard?'hard':started?'started':'';
   const locked=!canPractise(i);
   const counts='Карточки '+r.successes.cards+'/1 · Пропуски '+r.successes.input+'/2 · Диктант '+r.successes.dictation+'/2';
-  const label=locked?counts+' · Диктант пока закрыт':counts;
+  const label=locked?counts+' · '+MODE_ACCESS[mode].closed:counts;
   return '<button class="word-chip '+status+'" data-word="'+i+'"'+(locked?' disabled':'')+' aria-label="'+w.word+'. '+(mastered?'Выучено. ':r.hard?'Сложное слово. ':'')+label+'"><span class="status" aria-hidden="true">'+(mastered?'✓':r.hard?'!':started?'·':'')+'</span><span class="chip-text">'+w.word+'<small class="chip-meta">'+label+'</small></span></button>';
  }).join(''):'<p class="empty-state">Такого слова в коллекции нет.</p>';
  $('word-grid').querySelectorAll('[data-word]:not(:disabled)').forEach(btn=>btn.onclick=()=>{startSession('single',[Number(btn.dataset.word)]);scrollToStudy();});
@@ -829,15 +833,9 @@ function renderCollection(){
 function scrollToStudy(){$('study').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});setTimeout(()=>{const el=(mode==='dictation'&&$('play-word'))||$('answer')||$('reveal')||$('again');if(el)el.focus({preventScroll:true});},100);}
 function switchMode(next){
  if(mode===next)return;
- const startsNewRound=mode==='dictation'||next==='dictation'||position>=queue.length;
  mode=next;
  if(scope==='single'&&queue.length){startSession('single',[queue[0]]);return;}
- if(startsNewRound){startSession(scope==='hard'?'hard':wordFilter);return;}
- if(checked)position++;
- revealed=false;checked=false;
- filterRemaining();
- if(mode==='cards')shuffleRemaining();
- renderExercise();updateStats();save();
+ startSession(scope==='hard'?'hard':wordFilter);
 }
 function repeatHard(){startSession('hard');scrollToStudy();}
 function resumeAll(){collapseCollection();if(!WORD_FILTERS.includes(scope))startSession(wordFilter);else setNav('study');scrollToStudy();}
