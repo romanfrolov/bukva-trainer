@@ -30,6 +30,7 @@
 
 
 
+
 /* ADDITIONS: MEMORY AND TRANSFER */
 .memory-picture{margin:15px 0 0;display:grid;grid-template-columns:minmax(160px,.95fr) minmax(150px,1fr);align-items:center;gap:16px;padding:12px;background:#faf8fe;border:1px solid #ece5f7;border-radius:16px;text-align:left;color:#70667f;width:100%}.memory-visual{min-width:0}.memory-visual svg{width:100%;height:auto;display:block;stroke:none;stroke-width:0;overflow:visible}.memory-picture figcaption{font-size:12px;line-height:1.75}.memory-picture figcaption strong{display:block;font-size:11px;color:#81709e;margin-bottom:5px}.memory-picture figcaption span{display:block}.feedback .memory-picture{background:#fffafd;border-color:#f1e2ee}.feedback .memory-picture figcaption{color:#78667c}.card-answer-mistake{margin-top:15px;font-size:12px;color:#9b6851}.card-answer-mistake strong{color:#9b6851}@media(max-width:600px){.memory-picture{grid-template-columns:1fr;gap:8px;padding:12px}.memory-visual{max-width:320px;width:100%;margin:auto}.memory-picture figcaption{font-size:12px;padding:0 3px 3px}.memory-picture figcaption strong{margin-bottom:3px}}
 
@@ -667,7 +668,12 @@ function canPractise(id){
  const {cards,input}=record(id).successes;
  return cards>=REQUIREMENTS.cards&&(mode==='input'||input>=REQUIREMENTS.input);
 }
-function matchesScope(id){return canPractise(id)&&(scope!=='unlearned'||!isMastered(record(id)));}
+function matchesScope(id){
+ if(!canPractise(id))return false;
+ if(scope!=='unlearned')return true;
+ const progress=record(id);
+ return mode==='input'?progress.successes.input<REQUIREMENTS.input:!isMastered(progress);
+}
 const todayKey=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
 function dayWords(){const a=state.daily[todayKey()];return Array.isArray(a)?a:[];}
 function sessionSnapshot(){
@@ -709,7 +715,7 @@ function renderWordFilter(){
   button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
  }
  const help=$('word-filter-help');
- help.textContent=MODE_ACCESS[mode]?.rule??'';
+ help.textContent=mode==='input'&&scope==='unlearned'?'Здесь слова с зачётом в карточках, у которых ещё нет двух верных ответов подряд в пропусках.':MODE_ACCESS[mode]?.rule??'';
  help.classList.toggle('hidden',mode==='cards'||queue.length===0);
 }
 function renderExercise(){
@@ -807,6 +813,11 @@ function renderEmptyRound(){
   return;
  }
  if(scope==='unlearned'){
+  if(mode==='input'){
+   show({title:'Все доступные слова зачтены в пропусках',text:'Новые слова откроются после зачёта в карточках.',
+    actionLabel:'Повторить доступные слова',action:()=>setWordFilter('all')});
+   return;
+  }
   show({title:access?'Нет доступных невыученных слов':'Все слова выучены!',
    text:access?access.rule:'Можно повторить слова из коллекции.',
    actionLabel:access?'Повторить доступные слова':'Повторить все слова',action:()=>setWordFilter('all')});
